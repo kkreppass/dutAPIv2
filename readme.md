@@ -1,15 +1,17 @@
-# PlayEntry 백엔드 프록시 (Express)
+# DutAPIv2
 
-PlayEntry.org와 통신하기 위한 프록시/헬퍼 API입니다. CSRF/xToken 획득, 엔트리스토리 작성·조회, 사용자 검색 등을 단순화합니다.
+PlayEntry.org와 통신하기 위한 헬퍼 API입니다. CSRF/xToken 획득, 엔트리스토리 작성·조회, 사용자 검색 등을 단순화합니다.
 
-## 빠른 실행
+## 실행
+
+다운로드 후,
 
 ```bash
 npm install
 npm run dev   # http://localhost:3000
 ```
 
-## 공통 안내
+## 중요
 
 - Base URL: `http://localhost:3000`
 - 모든 응답은 JSON. 오류 시 `error`/`message` 필드를 확인하세요.
