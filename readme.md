@@ -55,14 +55,14 @@ npm run dev   # http://localhost:3000
 ### GET /api/getPost
 
 - 용도: 전체 글 목록 조회
-- Query: `category` (default free), `display` (default 10), `sort` (default created)
+- Query: `category` (default free, option [qna,tips,free]), `display` (default 10), `sort` (default created, option [created,visit,likesLength])
 - Response: `{ data: <graphql result> }` → 목록은 `data.data.discussList.list`
 - Error: 400(GraphQL 형식 오류), 404(CSRF 없음)
 
 ### GET /api/getUserPost
 
 - 용도: 특정 사용자의 글 목록 조회(놀랍게도 다른사람것도 조회 가능)
-- Query: `user`(필수), `category`(default free), `display`(default 8), `sort`(default created)
+- Query: `user`(필수), `category`(default free, option [qna,tips,free]), `display`(default 8), `sort`(default create, option [created,visit,likesLength])
 - Response: `{ data: <graphql result> }` → 목록은 `data.data.discussList.list`
 - Error: 400(GraphQL 형식 오류), 404(CSRF 없음)
 
