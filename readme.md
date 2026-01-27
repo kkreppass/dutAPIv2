@@ -17,7 +17,7 @@ npm run dev   # http://localhost:3000
 - 모든 응답은 JSON. 오류 시 `error`/`message` 필드를 확인하세요.
 - 쓰기 API는 CSRF 토큰과 xToken이 모두 필요합니다. `/api/csrftoken` → `/api/xToken` 순으로 호출 후 사용하세요.
 
-## API 목록
+## API
 
 ### GET /api/csrftoken
 
