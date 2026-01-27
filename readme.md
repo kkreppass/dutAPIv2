@@ -81,8 +81,8 @@ npm run dev   # http://localhost:3000
 
 ## Test scripts
 
-- 로그인: `frontend/src/test-login.js`
-- 글 작성: `frontend/src/test-write.js`
-- 댓글: `frontend/src/test-comment.js`
-- 목록 조회: `frontend/src/test-getPost.js`, `frontend/src/test-getUserPost.js`
-- 사용자 검색: `frontend/src/test-finduser.js`
+- 로그인: [examples/test-comment.js](examples/test-comment.js)
+- 글 작성: [examples/test-write.js](examples/test-write.js)
+- 댓글: [examples/test-comment.js](examples/test-comment.js)
+- 목록 조회: [examples/test-getPost.js](examples/test-getPost.js), [examples/test-getUserPost.js](examples/test-getUserPost.js)
+- 사용자 검색: [examples/test-findUser.js](examples/test-findUser.js)
