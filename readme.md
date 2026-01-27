@@ -73,13 +73,13 @@ npm run dev   # http://localhost:3000
 - Response(성공): `{ userId, userData }`
 - Error: 400(GraphQL 형식 오류), 404(User not found), 500(Internal)
 
-## 라이브러리 파일
+## Library files
 
 - Header: [lib/headers.js](lib/headers.js)
 - GraphQL Query: [lib/graphql.js](lib/graphql.js)
 - Session/Cookie Client: [lib/httpSession.js](lib/httpSession.js)
 
-## 테스트 스크립트 (프론트 폴더)
+## Test scripts
 
 - 로그인: `frontend/src/test-login.js`
 - 글 작성: `frontend/src/test-write.js`
