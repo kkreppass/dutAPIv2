@@ -216,6 +216,17 @@ app.post("/api/writeEntrystory", async (req, res) => {
         });
       }
 
+      // statusCode 2002는 첫 작품 공유 후 7일간 글 1개 제한
+      if (statusCode === 2002) {
+        return res.status(429).json({
+          status: false,
+          error: "first-entry-weekly-limit",
+          message: "첫 작품을 공유한 후 7일간은 글 작성이 제한됩니다.",
+          errors: writeRes.data.errors,
+          statusCode,
+        });
+      }
+
       // statusCode 2003은 도배 방지 또는 잘못된 변수 입력
       if (statusCode === 2003) {
         return res.status(429).json({

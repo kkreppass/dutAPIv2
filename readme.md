@@ -40,7 +40,7 @@ npm run dev   # http://localhost:3000
 - Response: `{ status: true, data: <graphql result> }`
 - Error 케이스:
   - 400: GraphQL 형식 오류 등
-  - 429: statusCode 2000 (공유 24시간 제한), 2003 (도배/변수 오류)
+  - 429: statusCode 2000 (공유 24시간 제한), 2002 (첫 작품 공유 후 7일간 글 1개 제한), 2003 (도배/변수 오류)
   - 403: statusCode 402 (captcha 필요)
 
 ### POST /api/writeComment
