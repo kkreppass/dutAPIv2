@@ -74,6 +74,13 @@ npm run dev   # http://localhost:3000
 - Response(성공): `{ userId, userData }`
 - Error: 400(GraphQL 형식 오류), 404(User not found), 500(Internal)
 
+### GET /api/getPostComment
+
+- 용도: 특정 글의 댓글 목록 조회
+- Query: `target` (필수), `display` (default 10), `sort` (default created), `order` (default 1), `searchAfter` (optional), `likesLength` (optional), `groupId` (optional)
+- Response: `{ status: true, data: <graphql result> }` → 목록은 `data.data.commentList.list`, 전체 개수는 `data.data.commentList.total`
+- Error: 400(GraphQL 형식 오류, target 누락), 404(CSRF 없음), 500(Internal)
+
 ## Library files
 
 - Header: [lib/headers.js](lib/headers.js)

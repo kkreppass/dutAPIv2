@@ -13,6 +13,7 @@ import {
   CREATE_ENTRYSTORY,
   CREATE_COMMENT,
   SELECT_ENTRYSTORY,
+  SELECT_COMMENTS,
   GET_USERS,
   SEARCH_FOLLOWERS,
   SEARCH_FOLLOWINGS,
@@ -677,6 +678,88 @@ app.get("/api/finduser", async (req, res) => {
   } catch (err) {
     console.error("Error:", err.message);
     res.status(500).json({
+      error: "Internal server error",
+      message: err.message,
+    });
+  }
+});
+
+app.get("/api/getPostComment", async (req, res) => {
+  try {
+    const {
+      display = 10,
+      target,
+      sort = "created",
+      order = 1,
+      searchAfter,
+      likesLength,
+      groupId,
+    } = req.query;
+
+    if (!target) {
+      return res.status(400).json({
+        status: false,
+        error: "target is required",
+      });
+    }
+
+    // 1️⃣ CSRF 토큰 먼저 가져오기
+    const csrfRes = await globalClient.get("https://playentry.org", {
+      headers: headersGetHTML(),
+    });
+
+    const $ = cheerio.load(csrfRes.data);
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+    if (!csrfToken) {
+      return res.status(404).json({
+        status: false,
+        error: "csrf-token not found",
+      });
+    }
+
+    // GraphQL 요청으로 댓글 목록 조회
+    const getRes = await globalClient.post(
+      "https://playentry.org/graphql/SELECT_COMMENTS",
+      {
+        query: SELECT_COMMENTS,
+        variables: {
+          target,
+          searchAfter,
+          likesLength:
+            likesLength === undefined ? undefined : parseInt(likesLength),
+          groupId,
+          pageParam: {
+            display: parseInt(display),
+            sort,
+            order: parseInt(order),
+          },
+        },
+      },
+      {
+        headers: headersGetPost(csrfToken),
+      },
+    );
+
+    // GraphQL 에러 체크
+    if (getRes.data?.errors && getRes.data.errors.length > 0) {
+      return res.status(400).json({
+        status: false,
+        error: "GraphQL error",
+        message:
+          getRes.data.errors[0].message ||
+          "GraphQL 형식이 잘못되었습니다. Network 요청의 형식을 수정한 후 다시 시도해주세요.",
+      });
+    }
+
+    res.json({
+      status: true,
+      data: getRes.data,
+    });
+  } catch (err) {
+    console.error("Error:", err.message);
+    res.status(500).json({
+      status: false,
       error: "Internal server error",
       message: err.message,
     });
