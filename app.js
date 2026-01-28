@@ -30,9 +30,8 @@ import {
 const app = express();
 app.use(express.json());
 
-// 개발 중엔 Vite에서 proxy로 붙일 거라 CORS가 꼭 필요하진 않지만,
-// 나중에 분리 배포할 수도 있으니 일단 기본값으로 켜둠
-app.use(cors({ origin: true, credentials: true }));
+// 모든 출처에서 fetch 요청 허용
+app.use(cors({ origin: "*", credentials: false }));
 
 // 전역 세션 클라이언트 (모든 라우터에서 공유)
 const { client: globalClient } = createSessionClient();
