@@ -53,6 +53,13 @@ npm run dev   # http://localhost:3000
   - 429: statusCode 2003 (도배/변수 오류)
   - 403: statusCode 402 (captcha 필요)
 
+### POST /api/updateVariable
+
+- 용도: 프로젝트 변수 업데이트
+- Body: `{ variableId: string, id: string }`
+- Response: `{ status: true, data: <graphql result> }`
+- Error: 400(GraphQL 형식 오류), 404(CSRF 없음), 500(Internal)
+
 ### GET /api/getPost
 
 - 용도: 전체 글 목록 조회
@@ -94,3 +101,4 @@ npm run dev   # http://localhost:3000
 - 댓글: [examples/test-comment.js](examples/test-comment.js)
 - 목록 조회: [examples/test-getPost.js](examples/test-getPost.js), [examples/test-getUserPost.js](examples/test-getUserPost.js)
 - 사용자 검색: [examples/test-findUser.js](examples/test-findUser.js)
+- 변수 업데이트: [examples/test-updateVariable.js](examples/test-updateVariable.js)

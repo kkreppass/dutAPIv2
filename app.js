@@ -17,6 +17,7 @@ import {
   GET_USERS,
   SEARCH_FOLLOWERS,
   SEARCH_FOLLOWINGS,
+  UPDATE_VARIABLE,
 } from "./lib/graphql.js";
 import {
   headersSignin,
@@ -366,6 +367,94 @@ app.post("/api/writeComment", async (req, res) => {
     res.status(500).json({
       status: false,
       error: err.message || "failed to write comment",
+      details: err.response?.data,
+    });
+  }
+});
+
+app.post("/api/updateVariable", async (req, res) => {
+  try {
+    const { variableId, id } = req.body;
+
+    if (!variableId || !id) {
+      return res.status(400).json({
+        status: false,
+        error: "variableId and id are required",
+      });
+    }
+
+    // CSRF 토큰 가져오기 (세션 쿠키는 globalClient가 유지)
+    const csrfRes = await globalClient.get("https://playentry.org", {
+      headers: headersGetHTML(),
+    });
+
+    const $ = cheerio.load(csrfRes.data);
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+    if (!csrfToken) {
+      return res.status(404).json({
+        status: false,
+        error: "csrf-token not found",
+      });
+    }
+
+    // 요청 예시 기준으로 payload는 고정, id만 주입
+    const variablesPayload = [
+      {
+        name: "샌즈",
+        id: variableId,
+        visible: false,
+        value: "162",
+        variableType: "variable",
+        isCloud: true,
+        isRealTime: false,
+        cloudDate: false,
+        object: null,
+        x: -231,
+        y: -200,
+      },
+    ];
+
+    const updateRes = await globalClient.post(
+      "https://playentry.org/graphql/UPDATE_VARIABLE",
+      {
+        query: UPDATE_VARIABLE,
+        variables: {
+          id,
+          variables: variablesPayload,
+        },
+      },
+      {
+        headers: headersGetPost(csrfToken),
+      },
+    );
+
+    if (updateRes.data?.errors && updateRes.data.errors.length > 0) {
+      const firstError = updateRes.data.errors[0];
+      return res.status(400).json({
+        status: false,
+        error: "GraphQL error",
+        message:
+          firstError.message ||
+          "GraphQL 형식이 잘못되었습니다. Network 요청의 형식을 수정한 후 다시 시도해주세요.",
+        errors: updateRes.data.errors,
+        statusCode: firstError.statusCode,
+      });
+    }
+
+    res.json({
+      status: true,
+      data: updateRes.data,
+    });
+  } catch (err) {
+    console.error("Error:", err.message);
+    if (err.response) {
+      console.error("Response status:", err.response.status);
+      console.error("Response data:", err.response.data);
+    }
+    res.status(500).json({
+      status: false,
+      error: err.message || "failed to update variable",
       details: err.response?.data,
     });
   }
