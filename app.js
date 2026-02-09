@@ -463,7 +463,35 @@ app.post("/api/updateVariable", async (req, res) => {
 app.get("/api/getPost", async (req, res) => {
   try {
     //category: qna, tips, free ...
-    const { category = "free", display = 10, sort = "created" } = req.query;
+    const {
+      category = "free",
+      display = 10,
+      sort = "created",
+      searchAfter,
+    } = req.query;
+
+    const normalizeSearchAfter = (value) => {
+      if (value === undefined) return undefined;
+      if (Array.isArray(value)) {
+        return value.map((item) => {
+          const num = Number(item);
+          return Number.isNaN(num) ? item : num;
+        });
+      }
+
+      if (typeof value === "string") {
+        try {
+          return JSON.parse(value);
+        } catch (err) {
+          const num = Number(value);
+          return Number.isNaN(num) ? value : [num];
+        }
+      }
+
+      return value;
+    };
+
+    const resolvedSearchAfter = normalizeSearchAfter(searchAfter);
 
     if (!category || !display || !sort) {
       return res.status(400).json({
@@ -497,6 +525,7 @@ app.get("/api/getPost", async (req, res) => {
           searchType: "scroll",
           term: "all",
           discussType: "entrystory",
+          searchAfter: resolvedSearchAfter,
           pageParam: {
             display: parseInt(display),
             sort,
