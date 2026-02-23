@@ -4,7 +4,8 @@ PlayEntry.org와 통신하기 위한 헬퍼 API입니다. CSRF/xToken 획득, en
 
 ## Start
 node.js, npm이 설치되어있어야 합니다.
-다운로드 후, 다운로드 폴더를 여세요. 그리고 터미널에 아래 명령어를 입력하세요.
+
+다운로드 후, 다운로드 폴더를 연 다음, 해당 폴더 터미널에 아래 명령어를 입력하세요.
 
 ```bash
 npm install
