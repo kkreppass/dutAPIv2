@@ -3,8 +3,8 @@
 PlayEntry.org와 통신하기 위한 헬퍼 API입니다. CSRF/xToken 획득, entrystory 작성(!!) & 조회, 사용자 검색 등을 기존 Plain API 대비 훨씬 간편하게 할 수 있게 해줍니다.
 
 ## Start
-
-다운로드 후, Terminal에 아래 명령어를 입력하세요.
+node.js, npm이 설치되어있어야 합니다.
+다운로드 후, 다운로드 폴더를 여세요. 그리고 터미널에 아래 명령어를 입력하세요.
 
 ```bash
 npm install
@@ -15,8 +15,8 @@ npm run dev   # http://localhost:3000
 
 - Base URL: `http://localhost:3000`
 - 모든 응답은 (아마) JSON으로 전송됩니다.
-- 오류 시 `error`/`message` 필드를 확인하는게 도움 많이될겁니다.
-- 쓰기 API는 CSRF 토큰과 xToken이 모두 필요합니다. `/api/csrftoken` → `/api/xToken` 순으로 호출 후 사용하세요.
+- 오류 시 `error`/`message` 필드를 확인하는게 큰 도움 될겁니다.
+- 글 작성 API는 CSRF 토큰과 xToken이 모두 필요합니다. `/api/csrftoken` → `/api/xToken` 순으로 호출 후 사용하세요.
 
 ## API
 
@@ -41,7 +41,7 @@ npm run dev   # http://localhost:3000
 - Error 케이스:
   - 400: GraphQL 형식 오류 등
   - 429: statusCode 2000 (공유 24시간 제한), 2002 (첫 작품 공유 후 7일간 글 1개 제한), 2003 (도배/변수 오류)
-  - 403: statusCode 402 (captcha 필요)
+  - 403: token invalid, statusCode 402 (captcha 필요)
 
 ### POST /api/writeComment
 
@@ -51,42 +51,42 @@ npm run dev   # http://localhost:3000
 - Error 케이스:
   - 400: GraphQL 형식 오류
   - 429: statusCode 2003 (도배/변수 오류)
-  - 403: statusCode 402 (captcha 필요)
+  - 403: token invalid, statusCode 402 (captcha 필요)
 
 ### POST /api/updateVariable
 
 - 용도: 프로젝트 변수 업데이트
 - Body: `{ variableId: string, id: string }`
 - Response: `{ status: true, data: <graphql result> }`
-- Error: 400(GraphQL 형식 오류), 404(CSRF 없음), 500(Internal)
+- Error: 400(GraphQL 형식 오류), 404(CSRF 없음), 500(Internal), 403(token invalid)
 
 ### GET /api/getPost
 
 - 용도: 전체 글 목록 조회
 - Query: `category` (default free, option [qna,tips,free]), `display` (default 10), `sort` (default created, option [created,visit,likesLength]), `searchAfter` (optional)
 - Response: `{ data: <graphql result> }` → 목록은 `data.data.discussList.list`
-- Error: 400(GraphQL 형식 오류), 404(CSRF 없음)
+- Error: 400(GraphQL 형식 오류), 404(CSRF 없음), 403(token invalid)
 
 ### GET /api/getUserPost
 
 - 용도: 특정 사용자의 글 목록 조회(놀랍게도 다른사람것도 조회 가능)
 - Query: `user`(필수), `category`(default free, option [qna,tips,free]), `display`(default 8), `sort`(default create, option [created,visit,likesLength])
 - Response: `{ data: <graphql result> }` → 목록은 `data.data.discussList.list`
-- Error: 400(GraphQL 형식 오류), 404(CSRF 없음)
+- Error: 400(GraphQL 형식 오류), 403(token invalid), 404(CSRF 없음)
 
 ### GET /api/finduser
 
 - 용도: 닉네임으로 사용자 검색
 - Query: `nickname` (필수)
 - Response(성공): `{ userId, userData }`
-- Error: 400(GraphQL 형식 오류), 404(User not found), 500(Internal)
+- Error: 400(GraphQL 형식 오류), 403(token invalid), 404(User not found), 500(Internal)
 
 ### GET /api/getPostComment
 
 - 용도: 특정 글의 댓글 목록 조회
 - Query: `target` (필수), `display` (default 10), `sort` (default created), `order` (default 1), `searchAfter` (optional), `likesLength` (optional), `groupId` (optional)
 - Response: `{ status: true, data: <graphql result> }` → 목록은 `data.data.commentList.list`, 전체 개수는 `data.data.commentList.total`
-- Error: 400(GraphQL 형식 오류, target 누락), 404(CSRF 없음), 500(Internal)
+- Error: 400(GraphQL 형식 오류, target 누락), 403(token invalid), 404(CSRF 없음), 500(Internal)
 
 ## Library files
 
@@ -96,6 +96,7 @@ npm run dev   # http://localhost:3000
 
 ## Test scripts
 
+cors 오류 안나게 적당한 곳에서 콘솔띄워서 실행하시면 됩니다.
 - 로그인: [examples/test-comment.js](examples/test-comment.js)
 - 글 작성: [examples/test-write.js](examples/test-write.js)
 - 댓글: [examples/test-comment.js](examples/test-comment.js)
