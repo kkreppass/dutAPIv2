@@ -1,6 +1,8 @@
+프록시 서버를 거칠 필요 없는 [npm package ](https://github.com/kkreppass/playentry-sdk)버전이 출시되었습니다. 훨씬 빠른 속도를 경험해보세요.
 
 <img width="300" alt="dutapiv2" src="https://github.com/user-attachments/assets/2d92071a-396a-4dab-a316-ae446827be2d" />
 <br>
+
 PlayEntry.org와 통신하기 위한 헬퍼 API입니다. 
 
 CSRF/xToken 획득, entrystory 작성(!!) & 조회, 사용자 검색 등을 기존 Plain API 대비 훨씬 간편하게 할 수 있게 해줍니다.
